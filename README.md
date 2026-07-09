@@ -1,6 +1,14 @@
-# Calculator App
+# AI Prompt Library
 
-A simple, working calculator built with HTML/CSS/JS on the frontend and a tiny Express server to serve it. Good second project for practicing the GitHub → Railway workflow.
+A searchable library of AI prompt templates for common work tasks — email writing, meeting summaries, Excel help, strategy docs (SWOT, competitor analysis), presentations, HR, and customer support.
+
+Employees can search or filter by category, click a prompt to see the full template, and copy it with one click to paste into ChatGPT, Claude, or any AI tool.
+
+## Features
+- Search by keyword across all prompts
+- Filter by category (Email, Meetings, Excel, Strategy, Presentations, Analysis, HR/People, Customer)
+- Click any prompt card to view the full template
+- One-click "Copy Prompt" button
 
 ## 1. Run it locally (optional)
 
@@ -9,17 +17,14 @@ npm install
 npm start
 ```
 
-Open http://localhost:3000 in your browser.
+Open http://localhost:3000
 
 ## 2. Push it to GitHub
-
-1. Create a new empty repository on GitHub (no README/gitignore, you already have them here).
-2. In this project folder:
 
 ```bash
 git init
 git add .
-git commit -m "First commit - calculator"
+git commit -m "First commit - AI prompt library"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 git push -u origin main
@@ -28,18 +33,20 @@ git push -u origin main
 ## 3. Deploy on Railway
 
 1. Go to https://railway.app and sign in with GitHub.
-2. Click **New Project** → **Deploy from GitHub repo**.
-3. Select the repo you just pushed.
-4. Railway auto-detects Node, installs dependencies, and runs `npm start`.
-5. Under the service's Settings, click **Generate Domain** to get a public URL.
+2. **New Project** → **Deploy from GitHub repo** → select this repo.
+3. Railway auto-detects Node, installs dependencies, runs `npm start`.
+4. Under Settings, click **Generate Domain** for a public URL.
 
-Visit your Railway URL to use the calculator live, from anywhere.
+## 4. Adding your own prompts
 
-## 4. Ideas to extend it
+All prompts live in `public/index.html`, inside the `var prompts = [...]` array near the top of the `<script>` section. Each entry looks like:
 
-- Add a history of past calculations
-- Add a dark/light theme toggle
-- Support keyboard shortcuts (already partially wired up in the JS)
-- Add scientific functions (sin, cos, sqrt, etc.)
+```js
+{
+  category: "Email",
+  title: "Professional Email",
+  template: "Write a professional email to [recipient/role] about [topic]..."
+}
+```
 
-Whenever you make a change, just commit and push — Railway redeploys automatically.
+Add a new object to the array (matching that format) to add a new prompt. New categories are picked up automatically — no other code changes needed.
