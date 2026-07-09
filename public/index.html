@@ -318,6 +318,11 @@ var prompts = [
     title: "Customer FAQ Entry",
     template: "Write a clear, concise FAQ entry answering the question: '[customer question]'. The answer should be friendly, accurate, and no more than 3-4 sentences, written for a general customer audience."
   }
+{
+  category: "Excel",
+  title: "Keyboard Shortcuts",
+  template: "What is the keybaord function in Excel to [function you would like to do]"
+}
 ];
 
 var categories = Array.from(new Set(prompts.map(function(p) { return p.category; })));
