@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Prompt Library</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    color: #1a1a1a;
+  }
+  header {
+    background: #1e1e2f;
+    color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+  }
+  header p {
+    margin: 0;
+    color: #b8b8c8;
+    font-size: 14px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  #searchInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .category-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .cat-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #444;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .cat-btn.active {
+    background: #1e1e2f;
+    color: #fff;
+    border-color: #1e1e2f;
+  }
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .prompt-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .prompt-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  .prompt-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #5a67d8;
+    background: #eef0fd;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .prompt-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+  }
+  .prompt-preview {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+  }
+  .prompt-preview mark, .modal-body mark {
+    background: #fff3b0;
+    color: #1a1a1a;
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+  .no-results {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+  }
+  .fill-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .fill-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fill-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .fill-field input {
+    padding: 9px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .fill-field input:focus {
+    outline: 2px solid #5a67d8;
+    outline-offset: 1px;
+  }
+  .prompt-card {
+    position: relative;
+  }
+  .fav-star {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #ccc;
+    user-select: none;
+    background: none;
+    border: none;
+    padding: 2px;
+    line-height: 1;
+  }
+  .fav-star.active {
+    color: #f1c40f;
+  }
+  .cheat-btn {
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #444;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cheat-btn:hover {
+    background: #f0f0f0;
+  }
+  .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .step-nav button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #f7f7fa;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .step-nav button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5a67d8;
+  }
+  .multi-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #5a67d8;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .print-full-body {
+    display: none;
+  }
+  @media print {
+    header, .controls, .category-filters, .modal-overlay { display: none !important; }
+    body { background: #fff; }
+    .prompt-grid { display: block !important; }
+    .prompt-card {
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0;
+      page-break-inside: avoid;
+      padding: 12px 0;
+    }
+    .fav-star { display: none; }
+    .prompt-preview { display: none; }
+    .print-full-body {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      white-space: pre-wrap;
+      margin-top: 6px;
+    }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal-overlay.open {
+    display: flex;
+  }
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .modal-body {
+    background: #f7f7fa;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: #222;
+    margin-bottom: 16px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .copy-btn {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .copy-btn:hover {
+    background: #4bdf8b;
+  }
+  .copy-btn.copied {
+    background: #27ae60;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 AI Prompt Library</h1>
+  <p>Ready-to-use prompt templates for common work tasks — copy, customize, and go</p>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search prompts (e.g. 'email', 'SWOT', 'Excel')...">
+    <button class="cheat-btn" id="printBtn">🖨️ Print Cheat Sheet</button>
+  </div>
+  <div class="category-filters" id="categoryFilters"></div>
+  <div class="prompt-grid" id="promptGrid"></div>
+  <div class="no-results" id="noResults" style="display:none;">No prompts match your search.</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="fill-form" id="fillForm"></div>
+    <div class="step-nav" id="stepNav" style="display:none;"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="copy-btn" id="copyBtn">Copy Prompt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var prompts = [
+  {
+    category: "Email",
+    title: "Professional Email",
+    template: "Write a professional email to [recipient/role] about [topic]. The tone should be [formal/friendly/urgent]. Key points to include:\n- [point 1]\n- [point 2]\n- [point 3]\n\nKeep it concise, and end with a clear call to action."
+  },
+  {
+    category: "Email",
+    title: "Follow-Up Email",
+    template: "Write a polite follow-up email to [recipient] regarding [previous topic/meeting]. It has been [timeframe] since we last spoke. Remind them of [key context] and ask about [next step/question]."
+  },
+  {
+    category: "Meetings",
+    title: "Meeting Summary",
+    template: "Summarize the following meeting notes into a clear, structured summary with sections for Key Decisions, Action Items (with owners and deadlines), and Open Questions:\n\n[paste raw meeting notes here]"
+  },
+  {
+    category: "Meetings",
+    title: "Meeting Agenda",
+    template: "Create a meeting agenda for a [duration]-minute meeting about [topic]. Attendees: [list attendees]. Goals for the meeting: [goal 1], [goal 2]. Include time allocations for each agenda item."
+  },
+  {
+    category: "Excel",
+    title: "Excel Formula Help",
+    template: "I need an Excel formula that does the following: [describe what you want, e.g. 'sums values in column B where column A equals a specific text value']. My data is structured as: [describe columns/ranges]. Please explain the formula and how it works."
+  },
+  {
+    category: "Excel",
+    title: "Data Cleaning Steps",
+    template: "I have a spreadsheet with the following issues: [describe issues, e.g. duplicate rows, inconsistent date formats, extra whitespace]. Walk me through step-by-step how to clean this data in Excel, including any formulas or tools I should use."
+  },
+  {
+    category: "Strategy",
+    title: "SWOT Analysis",
+    template: "Create a SWOT analysis for [company/product/project]. Consider the following context: [brief background]. Structure the output into four clear sections: Strengths, Weaknesses, Opportunities, and Threats, with 3-5 bullet points each."
+  },
+  {
+    category: "Strategy",
+    title: "Market Research Summary",
+    template: "Research and summarize the current market landscape for [industry/product category]. Include: market size and growth trends, key player, target customer segments, and emerging opportunities or risks. Cite general knowledge; note where data may be outdated."
+  },
+  {
+    category: "Strategy",
+    title: "Competitor Analysis",
+    template: "Compare [our company/product] against these competitors: [competitor 1], [competitor 2], [competitor 3]. For each, analyze: pricing, key features, target audience, and perceived strengths/weaknesses. End with a summary of our competitive positioning."
+  },
+  {
+    category: "Strategy",
+    title: "Acquisition Summary",
+    template: "Summarize the potential strategic rationale for [Company A] acquiring [Company B]. Consider: market synergies, product/technology fit, financial implications, and integration risks. Present this as a brief executive summary."
+  },
+  {
+    category: "Presentations",
+    title: "Presentation Outline",
+    template: "Create a slide-by-slide outline for a [duration]-minute presentation on [topic] for an audience of [audience type]. Include a title for each slide and 2-3 bullet points of key content per slide. End with a strong closing/call-to-action slide."
+  },
+  {
+    category: "Presentations",
+    title: "Executive Summary Slide",
+    template: "Write the content for a single executive summary slide covering [topic/project]. It should answer: what is it, why does it matter, what's the ask/next step. Keep it to 4-5 concise bullet points suitable for a slide."
+  },
+  {
+    category: "Writing",
+    title: "Rewrite for Clarity",
+    template: "Rewrite the following text to be clearer, more concise, and more professional, without changing its meaning:\n\n[paste text here]"
+  },
+  {
+    category: "Writing",
+    title: "Summarize a Document",
+    template: "Summarize the following document into [3-5] key bullet points suitable for someone who doesn't have time to read the full thing:\n\n[paste document text here]"
+  },
+  {
+    category: "Analysis",
+    title: "Pros and Cons List",
+    template: "Create a balanced pros and cons list for [decision/option], considering factors like [cost, time, risk, team impact, etc.]. End with a brief recommendation based on the most likely priorities of [stakeholder/team]."
+  },
+  {
+    category: "Analysis",
+    title: "Root Cause Analysis",
+    template: "Help me think through the root cause of the following problem: [describe the problem]. Use a 'five whys' style approach to dig past the surface symptom to the underlying cause, and suggest possible solutions."
+  },
+  {
+    category: "HR / People",
+    title: "Performance Review Draft",
+    template: "Help me draft a performance review for [employee name/role]. Their key accomplishments this period were: [accomplishment 1], [accomplishment 2]. Areas for growth include: [area 1]. Keep the tone constructive and specific, avoiding vague generalities."
+  },
+  {
+    category: "HR / People",
+    title: "Job Description",
+    template: "Write a job description for a [job title] role on our [team name] team. Key responsibilities include: [responsibility 1], [responsibility 2]. Required qualifications: [qualification 1], [qualification 2]. Keep the tone professional but approachable."
+  },
+  {
+    category: "Customer",
+    title: "Customer Support Response",
+    template: "Write a helpful, empathetic response to a customer who is experiencing [issue description]. Acknowledge their frustration, explain [solution/next step], and offer [compensation/follow-up] if appropriate."
+  },
+  {
+    category: "Customer",
+    title: "Customer FAQ Entry",
+    template: "Write a clear, concise FAQ entry answering the question: '[customer question]'. The answer should be friendly, accurate, and no more than 3-4 sentences, written for a general customer audience."
+  },
+  {
+    category: "Sales",
+    title: "Cold Outreach Email",
+    template: "Write a short, personalized cold outreach email to [prospect name/role] at [company name]. Reference [relevant context, e.g. recent news or shared connection]. Clearly state the value proposition of [product/service] in 1-2 sentences, and end with a low-pressure call to action like scheduling a brief call."
+  },
+  {
+    category: "Sales",
+    title: "Sales Objection Response",
+    template: "A prospect raised this objection: '[objection, e.g. too expensive / not the right time / already using a competitor]'. Help me write a thoughtful response that acknowledges their concern and reframes the value of [product/service] without being pushy."
+  },
+  {
+    category: "Sales",
+    title: "Proposal Summary",
+    template: "Write an executive summary for a sales proposal to [client/company name]. Include: the problem they're facing ([problem]), our proposed solution ([solution]), expected outcomes/ROI, and a suggested next step. Keep it to one tight paragraph suitable for the top of a proposal document."
+  },
+  {
+    category: "Legal",
+    title: "Plain-English Contract Summary",
+    template: "Summarize the following contract or legal clause into plain, non-legal English so a non-lawyer can understand the key obligations, rights, and risks:\n\n[paste contract text here]\n\nNote: this is for general understanding only and is not a substitute for professional legal review."
+  },
+  {
+    category: "Legal",
+    title: "NDA Request Email",
+    template: "Write a professional email to [recipient] requesting that they sign an NDA before we proceed with discussions about [topic/project]. Keep the tone collaborative, not overly formal or intimidating."
+  },
+  {
+    category: "Legal",
+    title: "Policy Explanation",
+    template: "Explain the following company policy in simple, friendly language suitable for an internal FAQ or onboarding doc:\n\n[paste policy text here]\n\nInclude a short example of how it applies in a common real-world situation."
+  },
+  {
+    category: "Finance",
+    title: "Budget Variance Explanation",
+    template: "Explain the variance between budgeted and actual spend for [department/project] this [month/quarter]. Budgeted: [amount]. Actual: [amount]. Key drivers of the difference: [driver 1], [driver 2]. Write this as a short paragraph suitable for a finance review meeting."
+  },
+  {
+    category: "Finance",
+    title: "Expense Report Summary",
+    template: "Summarize the following list of expenses into categories with subtotals, and flag anything that looks unusually high or potentially non-compliant with standard travel/expense policy:\n\n[paste expense list here]"
+  },
+  {
+    category: "Finance",
+    title: "Financial Metric Explainer",
+    template: "Explain what [financial metric, e.g. EBITDA, gross margin, churn rate, CAC] means in simple terms, why it matters for [type of business], and give one example of how a change in this metric would affect the business."
+  },
+  {
+    category: "Onboarding",
+    title: "New Hire Welcome Email",
+    template: "Write a warm welcome email to [new hire name], who is joining as [role] on [team name], starting [start date]. Include: what to expect on day one, who their main point of contact is ([manager/buddy name]), and one or two things that make the team/company culture special."
+  },
+  {
+    category: "Onboarding",
+    title: "30-60-90 Day Plan",
+    template: "Create a 30-60-90 day onboarding plan for a new [job title] joining the [team name] team. Include specific goals and learning milestones for each phase (30 days: [focus area], 60 days: [focus area], 90 days: [focus area])."
+  },
+  {
+    category: "Onboarding",
+    title: "Team Overview Doc",
+    template: "Write a short 'team overview' document for new hires joining the [team name] team. Include: the team's mission, key responsibilities, main tools/systems used ([tool 1], [tool 2]), and who's who on the team."
+  },
+  {
+    category: "Project Management",
+    title: "Project Status Update",
+    template: "Write a concise project status update for [project name] to send to [stakeholders]. Structure it as: Overall Status ([on track/at risk/delayed]), Key Accomplishments This Period, Upcoming Milestones, and Risks/Blockers. Keep it skimmable, not a wall of text."
+  },
+  {
+    category: "Project Management",
+    title: "Risk Assessment",
+    template: "Identify potential risks for the project '[project name]', which involves [brief project description]. For each risk, note the likelihood (low/medium/high), potential impact, and a suggested mitigation strategy."
+  },
+  {
+    category: "Project Management",
+    title: "Retrospective Summary",
+    template: "Summarize the following retrospective notes from [project/sprint name] into three clear sections: What Went Well, What Didn't Go Well, and Action Items for Next Time (with owners if mentioned):\n\n[paste raw retro notes here]"
+  },
+  {
+    category: "Strategy",
+    title: "Full Market Research Workflow",
+    steps: [
+      {
+        label: "Step 1: Market Landscape",
+        template: "Research and summarize the current market landscape for [industry/product category]. Include market size, growth trends, and key players."
+      },
+      {
+        label: "Step 2: Customer Segments",
+        template: "Based on the market landscape above, identify the 3-4 most important target customer segments for [product/company]. For each, describe their needs, pain points, and buying behavior."
+      },
+      {
+        label: "Step 3: Opportunity Summary",
+        template: "Using the market landscape and customer segments above, summarize the top 3 opportunities [company] should pursue, and the top 2 risks to watch out for."
+      }
+    ]
+  },
+  {
+    category: "Sales",
+    title: "Full Deal Prep Workflow",
+    steps: [
+      {
+        label: "Step 1: Account Research",
+        template: "Research [company name] and summarize: what they do, recent news, likely priorities this year, and any signals they might need [our product/service]."
+      },
+      {
+        label: "Step 2: Talking Points",
+        template: "Based on the research above, write 3-4 talking points for a discovery call with [prospect name/role] at [company name], focused on their likely priorities."
+      },
+      {
+        label: "Step 3: Follow-Up Email",
+        template: "Write a follow-up email to [prospect name] after our discovery call, referencing [key point discussed] and proposing [next step]."
+      }
+    ]
+  }
+];
+
+var categories = Array.from(new Set(prompts.map(function(p) { return p.category; })));
+var activeCategory = 'All';
+var currentTemplate = '';
+var currentPlaceholders = [];
+var placeholderValues = {};
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function highlightMatch(text, query) {
+  var escaped = escapeHtml(text);
+  if (!query) return escaped;
+  var escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var re = new RegExp('(' + escapedQuery + ')', 'ig');
+  return escaped.replace(re, '<mark>$1</mark>');
+}
+
+var FAV_KEY = 'promptLibraryFavorites';
+
+function getFavorites() {
+  try {
+    var raw = localStorage.getItem(FAV_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function isFavorite(title) {
+  return getFavorites().indexOf(title) !== -1;
+}
+
+function toggleFavorite(title) {
+  var favs = getFavorites();
+  var idx = favs.indexOf(title);
+  if (idx === -1) {
+    favs.push(title);
+  } else {
+    favs.splice(idx, 1);
+  }
+  try {
+    localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+  } catch (e) {}
+}
+
+function getFirstTemplate(p) {
+  return p.steps ? p.steps[0].template : p.template;
+}
+
+var categoryFilters = document.getElementById('categoryFilters');
+var promptGrid = document.getElementById('promptGrid');
+var searchInput = document.getElementById('searchInput');
+var noResults = document.getElementById('noResults');
+
+function renderCategoryFilters() {
+  categoryFilters.innerHTML = '';
+  var allBtn = document.createElement('button');
+  allBtn.className = 'cat-btn' + (activeCategory === 'All' ? ' active' : '');
+  allBtn.textContent = 'All';
+  allBtn.addEventListener('click', function() {
+    activeCategory = 'All';
+    renderCategoryFilters();
+    renderPrompts();
+  });
+  categoryFilters.appendChild(allBtn);
+
+  var favBtn = document.createElement('button');
+  favBtn.className = 'cat-btn' + (activeCategory === 'Favorites' ? ' active' : '');
+  favBtn.textContent = '★ Favorites';
+  favBtn.addEventListener('click', function() {
+    activeCategory = 'Favorites';
+    renderCategoryFilters();
+    renderPrompts();
+  });
+  categoryFilters.appendChild(favBtn);
+
+  categories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-btn' + (activeCategory === cat ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', function() {
+      activeCategory = cat;
+      renderCategoryFilters();
+      renderPrompts();
+    });
+    categoryFilters.appendChild(btn);
+  });
+}
+
+function renderPrompts() {
+  var query = searchInput.value.trim().toLowerCase();
+  var favs = getFavorites();
+
+  var filtered = prompts.filter(function(p) {
+    var matchesCategory =
+      activeCategory === 'All' ||
+      (activeCategory === 'Favorites' && favs.indexOf(p.title) !== -1) ||
+      p.category === activeCategory;
+    var firstTemplate = getFirstTemplate(p);
+    var matchesQuery = !query ||
+      p.title.toLowerCase().indexOf(query) !== -1 ||
+      p.category.toLowerCase().indexOf(query) !== -1 ||
+      firstTemplate.toLowerCase().indexOf(query) !== -1;
+    return matchesCategory && matchesQuery;
+  });
+
+  promptGrid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    noResults.style.display = 'block';
+    if (activeCategory === 'Favorites' && favs.length === 0 && !query) {
+      noResults.textContent = "You haven't starred any favorites yet — click the star on a prompt to save it here.";
+    } else {
+      noResults.textContent = 'No prompts match your search.';
+    }
+  } else {
+    noResults.style.display = 'none';
+  }
+
+  filtered.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'prompt-card';
+
+    var star = document.createElement('button');
+    star.className = 'fav-star' + (isFavorite(p.title) ? ' active' : '');
+    star.textContent = isFavorite(p.title) ? '★' : '☆';
+    star.title = 'Toggle favorite';
+    star.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleFavorite(p.title);
+      renderPrompts();
+    });
+
+    var tag = document.createElement('span');
+    tag.className = 'prompt-tag';
+    tag.innerHTML = highlightMatch(p.category, query);
+
+    var title = document.createElement('h3');
+    title.className = 'prompt-title';
+    title.innerHTML = highlightMatch(p.title, query);
+    if (p.steps) {
+      var badge = document.createElement('span');
+      badge.className = 'multi-badge';
+      badge.textContent = p.steps.length + ' STEPS';
+      title.appendChild(badge);
+    }
+
+    var firstTemplate = getFirstTemplate(p);
+    var previewText = firstTemplate.slice(0, 90) + (firstTemplate.length > 90 ? '...' : '');
+    var preview = document.createElement('p');
+    preview.className = 'prompt-preview';
+    preview.innerHTML = highlightMatch(previewText, query);
+
+    card.appendChild(star);
+    card.appendChild(tag);
+    card.appendChild(title);
+    card.appendChild(preview);
+
+    card.addEventListener('click', function() {
+      openModal(p);
+    });
+
+    promptGrid.appendChild(card);
+  });
+}
+
+var modalOverlay = document.getElementById('modalOverlay');
+var modalTitle = document.getElementById('modalTitle');
+var modalBody = document.getElementById('modalBody');
+var modalClose = document.getElementById('modalClose');
+var copyBtn = document.getElementById('copyBtn');
+var fillForm = document.getElementById('fillForm');
+var stepNav = document.getElementById('stepNav');
+
+var currentSteps = [];
+var currentStepIndex = 0;
+
+function extractPlaceholders(template) {
+  var matches = template.match(/\[([^\]]+)\]/g) || [];
+  var seen = {};
+  var unique = [];
+  matches.forEach(function(m) {
+    var key = m.slice(1, -1);
+    if (!seen[key]) {
+      seen[key] = true;
+      unique.push(key);
+    }
+  });
+  return unique;
+}
+
+function buildFilledTemplate(template, values) {
+  var result = template;
+  currentPlaceholders.forEach(function(key) {
+    var val = values[key];
+    var display = val && val.trim() ? val.trim() : ('[' + key + ']');
+    var re = new RegExp('\\[' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\]', 'g');
+    result = result.replace(re, display);
+  });
+  return result;
+}
+
+function updateModalBody() {
+  var filled = buildFilledTemplate(currentTemplate, placeholderValues);
+  modalBody.textContent = filled;
+}
+
+function renderStepNav() {
+  stepNav.innerHTML = '';
+  if (currentSteps.length <= 1) {
+    stepNav.style.display = 'none';
+    return;
+  }
+  stepNav.style.display = 'flex';
+
+  var prevBtn = document.createElement('button');
+  prevBtn.textContent = '← Prev';
+  prevBtn.disabled = currentStepIndex === 0;
+  prevBtn.addEventListener('click', function() {
+    loadStep(currentStepIndex - 1);
+  });
+
+  var label = document.createElement('span');
+  label.className = 'step-label';
+  var step = currentSteps[currentStepIndex];
+  label.textContent = (step.label || ('Step ' + (currentStepIndex + 1))) +
+    ' (' + (currentStepIndex + 1) + ' of ' + currentSteps.length + ')';
+
+  var nextBtn = document.createElement('button');
+  nextBtn.textContent = 'Next →';
+  nextBtn.disabled = currentStepIndex === currentSteps.length - 1;
+  nextBtn.addEventListener('click', function() {
+    loadStep(currentStepIndex + 1);
+  });
+
+  stepNav.appendChild(prevBtn);
+  stepNav.appendChild(label);
+  stepNav.appendChild(nextBtn);
+}
+
+function loadStep(index) {
+  currentStepIndex = index;
+  var step = currentSteps[index];
+  currentTemplate = step.template;
+  currentPlaceholders = extractPlaceholders(step.template);
+  placeholderValues = {};
+
+  fillForm.innerHTML = '';
+  if (currentPlaceholders.length > 0) {
+    currentPlaceholders.forEach(function(key) {
+      var field = document.createElement('div');
+      field.className = 'fill-field';
+
+      var label = document.createElement('label');
+      label.textContent = key;
+
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Enter ' + key + '...';
+      input.addEventListener('input', function() {
+        placeholderValues[key] = input.value;
+        updateModalBody();
+      });
+
+      field.appendChild(label);
+      field.appendChild(input);
+      fillForm.appendChild(field);
+    });
+  }
+
+  renderStepNav();
+  updateModalBody();
+  copyBtn.textContent = 'Copy Prompt';
+  copyBtn.classList.remove('copied');
+}
+
+function openModal(p) {
+  modalTitle.textContent = p.title;
+  currentSteps = p.steps ? p.steps : [{ label: null, template: p.template }];
+  loadStep(0);
+  modalOverlay.classList.add('open');
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('open');
+}
+
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', function(e) {
+  if (e.target === modalOverlay) closeModal();
+});
+
+copyBtn.addEventListener('click', function() {
+  var filled = buildFilledTemplate(currentTemplate, placeholderValues);
+  navigator.clipboard.writeText(filled).then(function() {
+    copyBtn.textContent = 'Copied!';
+    copyBtn.classList.add('copied');
+    setTimeout(function() {
+      copyBtn.textContent = 'Copy Prompt';
+      copyBtn.classList.remove('copied');
+    }, 1500);
+  });
+});
+
+searchInput.addEventListener('input', renderPrompts);
+
+var printBtn = document.getElementById('printBtn');
+printBtn.addEventListener('click', function() {
+  var cards = promptGrid.querySelectorAll('.prompt-card');
+  var fullBodies = [];
+
+  cards.forEach(function(card, i) {
+    var body = document.createElement('div');
+    body.className = 'print-full-body';
+    body.textContent = '';
+    card.appendChild(body);
+    fullBodies.push(body);
+  });
+
+  var query = searchInput.value.trim().toLowerCase();
+  var favs = getFavorites();
+  var filtered = prompts.filter(function(p) {
+    var matchesCategory =
+      activeCategory === 'All' ||
+      (activeCategory === 'Favorites' && favs.indexOf(p.title) !== -1) ||
+      p.category === activeCategory;
+    var firstTemplate = getFirstTemplate(p);
+    var matchesQuery = !query ||
+      p.title.toLowerCase().indexOf(query) !== -1 ||
+      p.category.toLowerCase().indexOf(query) !== -1 ||
+      firstTemplate.toLowerCase().indexOf(query) !== -1;
+    return matchesCategory && matchesQuery;
+  });
+
+  filtered.forEach(function(p, i) {
+    if (!fullBodies[i]) return;
+    if (p.steps) {
+      var text = p.steps.map(function(s) {
+        return (s.label || 'Step') + ':\n' + s.template;
+      }).join('\n\n');
+      fullBodies[i].textContent = text;
+    } else {
+      fullBodies[i].textContent = p.template;
+    }
+  });
+
+  window.print();
+
+  setTimeout(function() {
+    document.querySelectorAll('.print-full-body').forEach(function(el) {
+      el.remove();
+    });
+  }, 500);
+});
+
+renderCategoryFilters();
+renderPrompts();
+</script>
+
+</body>
+</html>
