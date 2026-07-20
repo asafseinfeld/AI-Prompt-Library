@@ -1,0 +1,504 @@
+[
+  {
+    "category": "Email",
+    "title": "Professional Email",
+    "template": "Write a professional email to [recipient/role] about [topic]. The tone should be [formal/friendly/urgent]. Key points to include:\n- [point 1]\n- [point 2]\n- [point 3]\n\nKeep it concise, and end with a clear call to action.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Email",
+    "title": "Follow-Up Email",
+    "template": "Write a polite follow-up email to [recipient] regarding [previous topic/meeting]. It has been [timeframe] since we last spoke. Remind them of [key context] and ask about [next step/question].",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Meetings",
+    "title": "Meeting Summary",
+    "template": "Summarize the following meeting notes into a clear, structured summary with sections for Key Decisions, Action Items (with owners and deadlines), and Open Questions:\n\n[paste raw meeting notes here]",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Meetings",
+    "title": "Meeting Agenda",
+    "template": "Create a meeting agenda for a [duration]-minute meeting about [topic]. Attendees: [list attendees]. Goals for the meeting: [goal 1], [goal 2]. Include time allocations for each agenda item.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Excel",
+    "title": "Excel Formula Help",
+    "template": "I need an Excel formula that does the following: [describe what you want, e.g. 'sums values in column B where column A equals a specific text value']. My data is structured as: [describe columns/ranges]. Please explain the formula and how it works.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Excel",
+    "title": "Data Cleaning Steps",
+    "template": "I have a spreadsheet with the following issues: [describe issues, e.g. duplicate rows, inconsistent date formats, extra whitespace]. Walk me through step-by-step how to clean this data in Excel, including any formulas or tools I should use.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Strategy",
+    "title": "SWOT Analysis",
+    "template": "Create a SWOT analysis for [company/product/project]. Consider the following context: [brief background]. Structure the output into four clear sections: Strengths, Weaknesses, Opportunities, and Threats, with 3-5 bullet points each.",
+    "department": [
+      "Corporate Development"
+    ],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "title": "Market Research Summary",
+    "template": "Research and summarize the current market landscape for [industry/product category]. Include: market size and growth trends, key player, target customer segments, and emerging opportunities or risks. Cite general knowledge; note where data may be outdated.",
+    "department": [
+      "Corporate Development"
+    ],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "title": "Competitor Analysis",
+    "template": "Compare [our company/product] against these competitors: [competitor 1], [competitor 2], [competitor 3]. For each, analyze: pricing, key features, target audience, and perceived strengths/weaknesses. End with a summary of our competitive positioning.",
+    "department": [
+      "Corporate Development"
+    ],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "title": "Acquisition Summary",
+    "template": "Summarize the potential strategic rationale for [Company A] acquiring [Company B]. Consider: market synergies, product/technology fit, financial implications, and integration risks. Present this as a brief executive summary.",
+    "department": [
+      "Corporate Development"
+    ],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Presentations",
+    "title": "Presentation Outline",
+    "template": "Create a slide-by-slide outline for a [duration]-minute presentation on [topic] for an audience of [audience type]. Include a title for each slide and 2-3 bullet points of key content per slide. End with a strong closing/call-to-action slide.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Presentations",
+    "title": "Executive Summary Slide",
+    "template": "Write the content for a single executive summary slide covering [topic/project]. It should answer: what is it, why does it matter, what's the ask/next step. Keep it to 4-5 concise bullet points suitable for a slide.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Writing",
+    "title": "Rewrite for Clarity",
+    "template": "Rewrite the following text to be clearer, more concise, and more professional, without changing its meaning:\n\n[paste text here]",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Writing",
+    "title": "Summarize a Document",
+    "template": "Summarize the following document into [3-5] key bullet points suitable for someone who doesn't have time to read the full thing:\n\n[paste document text here]",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Analysis",
+    "title": "Pros and Cons List",
+    "template": "Create a balanced pros and cons list for [decision/option], considering factors like [cost, time, risk, team impact, etc.]. End with a brief recommendation based on the most likely priorities of [stakeholder/team].",
+    "department": [],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Analysis",
+    "title": "Root Cause Analysis",
+    "template": "Help me think through the root cause of the following problem: [describe the problem]. Use a 'five whys' style approach to dig past the surface symptom to the underlying cause, and suggest possible solutions.",
+    "department": [],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "HR / People",
+    "title": "Performance Review Draft",
+    "template": "Help me draft a performance review for [employee name/role]. Their key accomplishments this period were: [accomplishment 1], [accomplishment 2]. Areas for growth include: [area 1]. Keep the tone constructive and specific, avoiding vague generalities.",
+    "department": [
+      "HR"
+    ],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "HR / People",
+    "title": "Job Description",
+    "template": "Write a job description for a [job title] role on our [team name] team. Key responsibilities include: [responsibility 1], [responsibility 2]. Required qualifications: [qualification 1], [qualification 2]. Keep the tone professional but approachable.",
+    "department": [
+      "HR"
+    ],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Customer",
+    "title": "Customer Support Response",
+    "template": "Write a helpful, empathetic response to a customer who is experiencing [issue description]. Acknowledge their frustration, explain [solution/next step], and offer [compensation/follow-up] if appropriate.",
+    "department": [],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Customer",
+    "title": "Customer FAQ Entry",
+    "template": "Write a clear, concise FAQ entry answering the question: '[customer question]'. The answer should be friendly, accurate, and no more than 3-4 sentences, written for a general customer audience.",
+    "department": [],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Sales",
+    "title": "Cold Outreach Email",
+    "template": "Write a short, personalized cold outreach email to [prospect name/role] at [company name]. Reference [relevant context, e.g. recent news or shared connection]. Clearly state the value proposition of [product/service] in 1-2 sentences, and end with a low-pressure call to action like scheduling a brief call.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Sales",
+    "title": "Sales Objection Response",
+    "template": "A prospect raised this objection: '[objection, e.g. too expensive / not the right time / already using a competitor]'. Help me write a thoughtful response that acknowledges their concern and reframes the value of [product/service] without being pushy.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Sales",
+    "title": "Proposal Summary",
+    "template": "Write an executive summary for a sales proposal to [client/company name]. Include: the problem they're facing ([problem]), our proposed solution ([solution]), expected outcomes/ROI, and a suggested next step. Keep it to one tight paragraph suitable for the top of a proposal document.",
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "Legal",
+    "title": "Plain-English Contract Summary",
+    "template": "Summarize the following contract or legal clause into plain, non-legal English so a non-lawyer can understand the key obligations, rights, and risks:\n\n[paste contract text here]\n\nNote: this is for general understanding only and is not a substitute for professional legal review.",
+    "department": [
+      "Compliance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Legal",
+    "title": "NDA Request Email",
+    "template": "Write a professional email to [recipient] requesting that they sign an NDA before we proceed with discussions about [topic/project]. Keep the tone collaborative, not overly formal or intimidating.",
+    "department": [
+      "Compliance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Legal",
+    "title": "Policy Explanation",
+    "template": "Explain the following company policy in simple, friendly language suitable for an internal FAQ or onboarding doc:\n\n[paste policy text here]\n\nInclude a short example of how it applies in a common real-world situation.",
+    "department": [
+      "Compliance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Finance",
+    "title": "Budget Variance Explanation",
+    "template": "Explain the variance between budgeted and actual spend for [department/project] this [month/quarter]. Budgeted: [amount]. Actual: [amount]. Key drivers of the difference: [driver 1], [driver 2]. Write this as a short paragraph suitable for a finance review meeting.",
+    "department": [
+      "Finance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Finance",
+    "title": "Expense Report Summary",
+    "template": "Summarize the following list of expenses into categories with subtotals, and flag anything that looks unusually high or potentially non-compliant with standard travel/expense policy:\n\n[paste expense list here]",
+    "department": [
+      "Finance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Finance",
+    "title": "Financial Metric Explainer",
+    "template": "Explain what [financial metric, e.g. EBITDA, gross margin, churn rate, CAC] means in simple terms, why it matters for [type of business], and give one example of how a change in this metric would affect the business.",
+    "department": [
+      "Finance"
+    ],
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Onboarding",
+    "title": "New Hire Welcome Email",
+    "template": "Write a warm welcome email to [new hire name], who is joining as [role] on [team name], starting [start date]. Include: what to expect on day one, who their main point of contact is ([manager/buddy name]), and one or two things that make the team/company culture special.",
+    "department": [
+      "HR"
+    ],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Onboarding",
+    "title": "30-60-90 Day Plan",
+    "template": "Create a 30-60-90 day onboarding plan for a new [job title] joining the [team name] team. Include specific goals and learning milestones for each phase (30 days: [focus area], 60 days: [focus area], 90 days: [focus area]).",
+    "department": [
+      "HR"
+    ],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Onboarding",
+    "title": "Team Overview Doc",
+    "template": "Write a short 'team overview' document for new hires joining the [team name] team. Include: the team's mission, key responsibilities, main tools/systems used ([tool 1], [tool 2]), and who's who on the team.",
+    "department": [
+      "HR"
+    ],
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Project Management",
+    "title": "Project Status Update",
+    "template": "Write a concise project status update for [project name] to send to [stakeholders]. Structure it as: Overall Status ([on track/at risk/delayed]), Key Accomplishments This Period, Upcoming Milestones, and Risks/Blockers. Keep it skimmable, not a wall of text.",
+    "department": [],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Project Management",
+    "title": "Risk Assessment",
+    "template": "Identify potential risks for the project '[project name]', which involves [brief project description]. For each risk, note the likelihood (low/medium/high), potential impact, and a suggested mitigation strategy.",
+    "department": [],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Project Management",
+    "title": "Retrospective Summary",
+    "template": "Summarize the following retrospective notes from [project/sprint name] into three clear sections: What Went Well, What Didn't Go Well, and Action Items for Next Time (with owners if mentioned):\n\n[paste raw retro notes here]",
+    "department": [],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "title": "Full Market Research Workflow",
+    "steps": [
+      {
+        "label": "Step 1: Market Landscape",
+        "template": "Research and summarize the current market landscape for [industry/product category]. Include market size, growth trends, and key players."
+      },
+      {
+        "label": "Step 2: Customer Segments",
+        "template": "Based on the market landscape above, identify the 3-4 most important target customer segments for [product/company]. For each, describe their needs, pain points, and buying behavior."
+      },
+      {
+        "label": "Step 3: Opportunity Summary",
+        "template": "Using the market landscape and customer segments above, summarize the top 3 opportunities [company] should pursue, and the top 2 risks to watch out for."
+      }
+    ],
+    "department": [
+      "Corporate Development"
+    ],
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Sales",
+    "title": "Full Deal Prep Workflow",
+    "steps": [
+      {
+        "label": "Step 1: Account Research",
+        "template": "Research [company name] and summarize: what they do, recent news, likely priorities this year, and any signals they might need [our product/service]."
+      },
+      {
+        "label": "Step 2: Talking Points",
+        "template": "Based on the research above, write 3-4 talking points for a discovery call with [prospect name/role] at [company name], focused on their likely priorities."
+      },
+      {
+        "label": "Step 3: Follow-Up Email",
+        "template": "Write a follow-up email to [prospect name] after our discovery call, referencing [key point discussed] and proposing [next step]."
+      }
+    ],
+    "department": [],
+    "flags": []
+  },
+  {
+    "category": "HR / People",
+    "department": [
+      "HR"
+    ],
+    "title": "Employment Verification Response",
+    "template": "Draft a professional response to an employment verification request for [employee name]. Confirm only: job title ([title]), employment dates ([start date] to [end date, or 'present']), and employment status ([status]). Do not include any information beyond what was specifically requested.",
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "HR / People",
+    "department": [
+      "HR"
+    ],
+    "title": "Termination Documentation Checklist",
+    "template": "Create a checklist for processing the termination of [employee name/role], separating for reason: [reason for separation]. Include standard steps like updating employment records, notifying relevant systems ([systems, e.g. payroll, benefits]), and required documentation to complete. Flag anything that should be double-checked with HR policy before finalizing.",
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "HR / People",
+    "department": [
+      "HR"
+    ],
+    "title": "Unemployment Hearing Prep Summary",
+    "template": "Summarize the key facts for an unemployment hearing regarding [employee name]'s separation from the company. Include: reason for separation ([reason]), relevant dates, and a clear, factual timeline based on the following notes:\n\n[paste employment history / separation notes here]\n\nKeep the tone factual and neutral, suitable for presenting to a hearing referee.",
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Finance",
+    "department": [
+      "HR",
+      "Finance"
+    ],
+    "title": "Payroll Deduction Reconciliation Explainer",
+    "template": "Help me reconcile the following payroll deductions against expected amounts for [pay period]. Deduction types: [medical/dental/vision/other]. Here is the data:\n\n[paste deduction data here]\n\nIdentify any mismatches or amounts that look off, and explain what might be causing each discrepancy.",
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Legal",
+    "department": [
+      "Compliance"
+    ],
+    "title": "Investigation Findings Summary",
+    "template": "Summarize the findings of an internal investigation into [type of complaint, e.g. fraud, conflict of interest, policy violation]. Structure the summary into: Background, Findings, and Recommended Next Steps, based on the following notes:\n\n[paste investigation notes here]\n\nKeep the tone neutral and factual. Note: this is a draft for internal review only and should be verified against full documentation before being finalized.",
+    "flags": [
+      "verify",
+      "privacy"
+    ]
+  },
+  {
+    "category": "Legal",
+    "department": [
+      "Compliance"
+    ],
+    "title": "Regulatory Research Digest",
+    "template": "Research and summarize recent changes to [specific regulation/topic, e.g. state labor law, HIPAA guidance] relevant to [industry/department]. For each key point, note the source so it can be independently verified before being relied on.",
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "department": [
+      "Corporate Development"
+    ],
+    "title": "Deal Workup Structure",
+    "template": "Create a structure/outline for a preliminary financial workup on a potential acquisition target: [company/target name]. Include sections for: company overview, key financials to gather ([revenue, EBITDA, etc.]), market position, and initial risk considerations. This is a starting framework \u2014 actual figures should come from verified source documents, not be estimated by AI.",
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Strategy",
+    "department": [
+      "Corporate Development"
+    ],
+    "title": "Market Expansion Research Brief",
+    "template": "Research the market opportunity for expanding [company/service line] into [new market/region]. Include: market size/demand signals, potential competitors already operating there, and regulatory or licensing considerations to be aware of. Flag anything that should be verified with local/regional sources before acting on it.",
+    "flags": [
+      "verify"
+    ]
+  },
+  {
+    "category": "Writing",
+    "department": [
+      "Marketing"
+    ],
+    "title": "Social Caption & Flyer Copy",
+    "template": "Write [3] short social media caption options and one flyer headline for [campaign/topic]. Audience: [target audience]. Tone: [brand tone, e.g. warm, professional, energetic]. Keep captions under 200 characters each.",
+    "flags": []
+  },
+  {
+    "category": "Presentations",
+    "department": [
+      "Marketing"
+    ],
+    "title": "Branded Image Generation Brief",
+    "template": "Write a detailed image generation prompt for creating a [type of visual, e.g. social poster, flyer, brochure image] featuring [subject, e.g. a caregiver with a client]. Style: [brand style, e.g. warm and photorealistic]. Include: setting, mood, color palette, and any text/logo placement notes.",
+    "flags": []
+  },
+  {
+    "category": "Project Management",
+    "department": [
+      "Operations"
+    ],
+    "title": "Inbox Triage & To-Do List",
+    "template": "Organize the following forwarded emails into a prioritized to-do list, grouped by urgency (Urgent / This Week / Can Wait). For each item, note who it's from and what action is needed:\n\n[paste email subject lines/summaries here]",
+    "flags": [
+      "privacy"
+    ]
+  },
+  {
+    "category": "Analysis",
+    "department": [
+      "Operations"
+    ],
+    "title": "State Regulation Summary for Operations",
+    "template": "Summarize the following state regulation or budget document into the key points relevant to [department/operations area]. Highlight anything that requires an operational change or compliance action, and note which parts should be verified with legal/compliance before acting:\n\n[paste regulation/budget text here]",
+    "flags": [
+      "verify"
+    ]
+  }
+]
