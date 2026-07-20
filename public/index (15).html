@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Prompt Library</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    color: #1a1a1a;
+  }
+  header {
+    background: #1e1e2f;
+    color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+  }
+  header p {
+    margin: 0;
+    color: #b8b8c8;
+    font-size: 14px;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  #searchInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .category-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .cat-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #444;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .cat-btn.active {
+    background: #1e1e2f;
+    color: #fff;
+    border-color: #1e1e2f;
+  }
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .prompt-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+  .prompt-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  .prompt-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #5a67d8;
+    background: #eef0fd;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .prompt-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+  }
+  .prompt-preview {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+  }
+  .prompt-preview mark, .modal-body mark {
+    background: #fff3b0;
+    color: #1a1a1a;
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+  .no-results {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+  }
+  .fill-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .fill-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fill-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .fill-field input {
+    padding: 9px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  .fill-field input:focus {
+    outline: 2px solid #5a67d8;
+    outline-offset: 1px;
+  }
+  .prompt-card {
+    position: relative;
+  }
+  .fav-star {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #ccc;
+    user-select: none;
+    background: none;
+    border: none;
+    padding: 2px;
+    line-height: 1;
+  }
+  .fav-star.active {
+    color: #f1c40f;
+  }
+  .cheat-btn {
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #444;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cheat-btn:hover {
+    background: #f0f0f0;
+  }
+  .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .step-nav button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #f7f7fa;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .step-nav button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5a67d8;
+  }
+  .multi-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #5a67d8;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .print-full-body {
+    display: none;
+  }
+  .filter-section-label {
+    color: #999;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 4px 0 6px 0;
+  }
+  .flag-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-right: 6px;
+    margin-top: 4px;
+  }
+  .flag-verify {
+    background: #fff3cd;
+    color: #8a6500;
+  }
+  .flag-privacy {
+    background: #fde2e2;
+    color: #a11d1d;
+  }
+  .flag-banner {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .flag-banner.verify {
+    background: #fff3cd;
+    color: #6b5000;
+    border: 1px solid #f0d98a;
+  }
+  .flag-banner.privacy {
+    background: #fde2e2;
+    color: #7a1414;
+    border: 1px solid #f3b8b8;
+  }
+  @media print {
+    header, .controls, .category-filters, .modal-overlay { display: none !important; }
+    body { background: #fff; }
+    .prompt-grid { display: block !important; }
+    .prompt-card {
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0;
+      page-break-inside: avoid;
+      padding: 12px 0;
+    }
+    .fav-star { display: none; }
+    .prompt-preview { display: none; }
+    .print-full-body {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      white-space: pre-wrap;
+      margin-top: 6px;
+    }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal-overlay.open {
+    display: flex;
+  }
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .modal-body {
+    background: #f7f7fa;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: #222;
+    margin-bottom: 16px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .copy-btn {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .copy-btn:hover {
+    background: #4bdf8b;
+  }
+  .copy-btn.copied {
+    background: #27ae60;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 AI Prompt Library</h1>
+  <p>Ready-to-use prompt templates for common work tasks — copy, customize, and go</p>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search prompts (e.g. 'email', 'SWOT', 'Excel')...">
+    <button class="cheat-btn" id="printBtn">🖨️ Print Cheat Sheet</button>
+  </div>
+  <div class="filter-section-label">Filter by Type</div>
+  <div class="category-filters" id="categoryFilters"></div>
+  <div class="filter-section-label">Filter by Department</div>
+  <div class="category-filters" id="departmentFilters"></div>
+  <div class="prompt-grid" id="promptGrid"></div>
+  <div class="no-results" id="noResults" style="display:none;">No prompts match your search.</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div id="flagBanners"></div>
+    <div class="fill-form" id="fillForm"></div>
+    <div class="step-nav" id="stepNav" style="display:none;"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="copy-btn" id="copyBtn">Copy Prompt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var prompts = [];
+
+var categories = [];
+var departments = [];
+var activeCategory = 'All';
+var activeDepartment = 'All';
+var currentTemplate = '';
+var currentPlaceholders = [];
+var placeholderValues = {};
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function highlightMatch(text, query) {
+  var escaped = escapeHtml(text);
+  if (!query) return escaped;
+  var escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var re = new RegExp('(' + escapedQuery + ')', 'ig');
+  return escaped.replace(re, '<mark>$1</mark>');
+}
+
+var FAV_KEY = 'promptLibraryFavorites';
+
+function getFavorites() {
+  try {
+    var raw = localStorage.getItem(FAV_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function isFavorite(title) {
+  return getFavorites().indexOf(title) !== -1;
+}
+
+function toggleFavorite(title) {
+  var favs = getFavorites();
+  var idx = favs.indexOf(title);
+  if (idx === -1) {
+    favs.push(title);
+  } else {
+    favs.splice(idx, 1);
+  }
+  try {
+    localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+  } catch (e) {}
+}
+
+function getFirstTemplate(p) {
+  return p.steps ? p.steps[0].template : p.template;
+}
+
+var categoryFilters = document.getElementById('categoryFilters');
+var promptGrid = document.getElementById('promptGrid');
+var searchInput = document.getElementById('searchInput');
+var noResults = document.getElementById('noResults');
+var departmentFilters = document.getElementById('departmentFilters');
+
+function renderCategoryFilters() {
+  categoryFilters.innerHTML = '';
+  var allBtn = document.createElement('button');
+  allBtn.className = 'cat-btn' + (activeCategory === 'All' ? ' active' : '');
+  allBtn.textContent = 'All';
+  allBtn.addEventListener('click', function() {
+    activeCategory = 'All';
+    renderCategoryFilters();
+    renderPrompts();
+  });
+  categoryFilters.appendChild(allBtn);
+
+  var favBtn = document.createElement('button');
+  favBtn.className = 'cat-btn' + (activeCategory === 'Favorites' ? ' active' : '');
+  favBtn.textContent = '★ Favorites';
+  favBtn.addEventListener('click', function() {
+    activeCategory = 'Favorites';
+    renderCategoryFilters();
+    renderPrompts();
+  });
+  categoryFilters.appendChild(favBtn);
+
+  categories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-btn' + (activeCategory === cat ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', function() {
+      activeCategory = cat;
+      renderCategoryFilters();
+      renderPrompts();
+    });
+    categoryFilters.appendChild(btn);
+  });
+}
+
+function renderDepartmentFilters() {
+  departmentFilters.innerHTML = '';
+  var allBtn = document.createElement('button');
+  allBtn.className = 'cat-btn' + (activeDepartment === 'All' ? ' active' : '');
+  allBtn.textContent = 'All';
+  allBtn.addEventListener('click', function() {
+    activeDepartment = 'All';
+    renderDepartmentFilters();
+    renderPrompts();
+  });
+  departmentFilters.appendChild(allBtn);
+
+  departments.forEach(function(dept) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-btn' + (activeDepartment === dept ? ' active' : '');
+    btn.textContent = dept;
+    btn.addEventListener('click', function() {
+      activeDepartment = dept;
+      renderDepartmentFilters();
+      renderPrompts();
+    });
+    departmentFilters.appendChild(btn);
+  });
+}
+
+function renderPrompts() {
+  var query = searchInput.value.trim().toLowerCase();
+  var favs = getFavorites();
+
+  var filtered = prompts.filter(function(p) {
+    var matchesCategory =
+      activeCategory === 'All' ||
+      (activeCategory === 'Favorites' && favs.indexOf(p.title) !== -1) ||
+      p.category === activeCategory;
+    var matchesDepartment =
+      activeDepartment === 'All' ||
+      (p.department && p.department.indexOf(activeDepartment) !== -1);
+    var firstTemplate = getFirstTemplate(p);
+    var matchesQuery = !query ||
+      p.title.toLowerCase().indexOf(query) !== -1 ||
+      p.category.toLowerCase().indexOf(query) !== -1 ||
+      firstTemplate.toLowerCase().indexOf(query) !== -1;
+    return matchesCategory && matchesDepartment && matchesQuery;
+  });
+
+  promptGrid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    noResults.style.display = 'block';
+    if (activeCategory === 'Favorites' && favs.length === 0 && !query) {
+      noResults.textContent = "You haven't starred any favorites yet — click the star on a prompt to save it here.";
+    } else {
+      noResults.textContent = 'No prompts match your search.';
+    }
+  } else {
+    noResults.style.display = 'none';
+  }
+
+  filtered.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'prompt-card';
+
+    var star = document.createElement('button');
+    star.className = 'fav-star' + (isFavorite(p.title) ? ' active' : '');
+    star.textContent = isFavorite(p.title) ? '★' : '☆';
+    star.title = 'Toggle favorite';
+    star.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleFavorite(p.title);
+      renderPrompts();
+    });
+
+    var tag = document.createElement('span');
+    tag.className = 'prompt-tag';
+    tag.innerHTML = highlightMatch(p.category, query);
+
+    var title = document.createElement('h3');
+    title.className = 'prompt-title';
+    title.innerHTML = highlightMatch(p.title, query);
+    if (p.steps) {
+      var badge = document.createElement('span');
+      badge.className = 'multi-badge';
+      badge.textContent = p.steps.length + ' STEPS';
+      title.appendChild(badge);
+    }
+
+    var firstTemplate = getFirstTemplate(p);
+    var previewText = firstTemplate.slice(0, 90) + (firstTemplate.length > 90 ? '...' : '');
+    var preview = document.createElement('p');
+    preview.className = 'prompt-preview';
+    preview.innerHTML = highlightMatch(previewText, query);
+
+    card.appendChild(star);
+    card.appendChild(tag);
+    card.appendChild(title);
+    card.appendChild(preview);
+
+    if (p.flags && p.flags.length > 0) {
+      var flagWrap = document.createElement('div');
+      p.flags.forEach(function(flag) {
+        var fb = document.createElement('span');
+        if (flag === 'verify') {
+          fb.className = 'flag-badge flag-verify';
+          fb.textContent = '⚠️ Verify';
+        } else if (flag === 'privacy') {
+          fb.className = 'flag-badge flag-privacy';
+          fb.textContent = '🔒 Sensitive data';
+        }
+        flagWrap.appendChild(fb);
+      });
+      card.appendChild(flagWrap);
+    }
+
+    card.addEventListener('click', function() {
+      openModal(p);
+    });
+
+    promptGrid.appendChild(card);
+  });
+}
+
+var modalOverlay = document.getElementById('modalOverlay');
+var modalTitle = document.getElementById('modalTitle');
+var modalBody = document.getElementById('modalBody');
+var modalClose = document.getElementById('modalClose');
+var copyBtn = document.getElementById('copyBtn');
+var fillForm = document.getElementById('fillForm');
+var stepNav = document.getElementById('stepNav');
+
+var currentSteps = [];
+var currentStepIndex = 0;
+
+function extractPlaceholders(template) {
+  var matches = template.match(/\[([^\]]+)\]/g) || [];
+  var seen = {};
+  var unique = [];
+  matches.forEach(function(m) {
+    var key = m.slice(1, -1);
+    if (!seen[key]) {
+      seen[key] = true;
+      unique.push(key);
+    }
+  });
+  return unique;
+}
+
+function buildFilledTemplate(template, values) {
+  var result = template;
+  currentPlaceholders.forEach(function(key) {
+    var val = values[key];
+    var display = val && val.trim() ? val.trim() : ('[' + key + ']');
+    var re = new RegExp('\\[' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\]', 'g');
+    result = result.replace(re, display);
+  });
+  return result;
+}
+
+function updateModalBody() {
+  var filled = buildFilledTemplate(currentTemplate, placeholderValues);
+  modalBody.textContent = filled;
+}
+
+function renderStepNav() {
+  stepNav.innerHTML = '';
+  if (currentSteps.length <= 1) {
+    stepNav.style.display = 'none';
+    return;
+  }
+  stepNav.style.display = 'flex';
+
+  var prevBtn = document.createElement('button');
+  prevBtn.textContent = '← Prev';
+  prevBtn.disabled = currentStepIndex === 0;
+  prevBtn.addEventListener('click', function() {
+    loadStep(currentStepIndex - 1);
+  });
+
+  var label = document.createElement('span');
+  label.className = 'step-label';
+  var step = currentSteps[currentStepIndex];
+  label.textContent = (step.label || ('Step ' + (currentStepIndex + 1))) +
+    ' (' + (currentStepIndex + 1) + ' of ' + currentSteps.length + ')';
+
+  var nextBtn = document.createElement('button');
+  nextBtn.textContent = 'Next →';
+  nextBtn.disabled = currentStepIndex === currentSteps.length - 1;
+  nextBtn.addEventListener('click', function() {
+    loadStep(currentStepIndex + 1);
+  });
+
+  stepNav.appendChild(prevBtn);
+  stepNav.appendChild(label);
+  stepNav.appendChild(nextBtn);
+}
+
+function loadStep(index) {
+  currentStepIndex = index;
+  var step = currentSteps[index];
+  currentTemplate = step.template;
+  currentPlaceholders = extractPlaceholders(step.template);
+  placeholderValues = {};
+
+  fillForm.innerHTML = '';
+  if (currentPlaceholders.length > 0) {
+    currentPlaceholders.forEach(function(key) {
+      var field = document.createElement('div');
+      field.className = 'fill-field';
+
+      var label = document.createElement('label');
+      label.textContent = key;
+
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Enter ' + key + '...';
+      input.addEventListener('input', function() {
+        placeholderValues[key] = input.value;
+        updateModalBody();
+      });
+
+      field.appendChild(label);
+      field.appendChild(input);
+      fillForm.appendChild(field);
+    });
+  }
+
+  renderStepNav();
+  updateModalBody();
+  copyBtn.textContent = 'Copy Prompt';
+  copyBtn.classList.remove('copied');
+}
+
+function openModal(p) {
+  modalTitle.textContent = p.title;
+  currentSteps = p.steps ? p.steps : [{ label: null, template: p.template }];
+
+  var flagBanners = document.getElementById('flagBanners');
+  flagBanners.innerHTML = '';
+  if (p.flags && p.flags.length > 0) {
+    p.flags.forEach(function(flag) {
+      var banner = document.createElement('div');
+      if (flag === 'verify') {
+        banner.className = 'flag-banner verify';
+        banner.textContent = '⚠️ Verify before use: double-check facts, figures, or citations this produces before relying on them.';
+      } else if (flag === 'privacy') {
+        banner.className = 'flag-banner privacy';
+        banner.textContent = '🔒 Sensitive data: avoid pasting real employee, patient, or customer identifying information into this prompt.';
+      }
+      flagBanners.appendChild(banner);
+    });
+  }
+
+  loadStep(0);
+  modalOverlay.classList.add('open');
+}
+
+function closeModal() {
+  modalOverlay.classList.remove('open');
+}
+
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', function(e) {
+  if (e.target === modalOverlay) closeModal();
+});
+
+copyBtn.addEventListener('click', function() {
+  var filled = buildFilledTemplate(currentTemplate, placeholderValues);
+  navigator.clipboard.writeText(filled).then(function() {
+    copyBtn.textContent = 'Copied!';
+    copyBtn.classList.add('copied');
+    setTimeout(function() {
+      copyBtn.textContent = 'Copy Prompt';
+      copyBtn.classList.remove('copied');
+    }, 1500);
+  });
+});
+
+searchInput.addEventListener('input', renderPrompts);
+
+var printBtn = document.getElementById('printBtn');
+printBtn.addEventListener('click', function() {
+  var cards = promptGrid.querySelectorAll('.prompt-card');
+  var fullBodies = [];
+
+  cards.forEach(function(card, i) {
+    var body = document.createElement('div');
+    body.className = 'print-full-body';
+    body.textContent = '';
+    card.appendChild(body);
+    fullBodies.push(body);
+  });
+
+  var query = searchInput.value.trim().toLowerCase();
+  var favs = getFavorites();
+  var filtered = prompts.filter(function(p) {
+    var matchesCategory =
+      activeCategory === 'All' ||
+      (activeCategory === 'Favorites' && favs.indexOf(p.title) !== -1) ||
+      p.category === activeCategory;
+    var matchesDepartment =
+      activeDepartment === 'All' ||
+      (p.department && p.department.indexOf(activeDepartment) !== -1);
+    var firstTemplate = getFirstTemplate(p);
+    var matchesQuery = !query ||
+      p.title.toLowerCase().indexOf(query) !== -1 ||
+      p.category.toLowerCase().indexOf(query) !== -1 ||
+      firstTemplate.toLowerCase().indexOf(query) !== -1;
+    return matchesCategory && matchesDepartment && matchesQuery;
+  });
+
+  filtered.forEach(function(p, i) {
+    if (!fullBodies[i]) return;
+    if (p.steps) {
+      var text = p.steps.map(function(s) {
+        return (s.label || 'Step') + ':\n' + s.template;
+      }).join('\n\n');
+      fullBodies[i].textContent = text;
+    } else {
+      fullBodies[i].textContent = p.template;
+    }
+  });
+
+  window.print();
+
+  setTimeout(function() {
+    document.querySelectorAll('.print-full-body').forEach(function(el) {
+      el.remove();
+    });
+  }, 500);
+});
+
+fetch('prompts.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    prompts = data;
+    categories = Array.from(new Set(prompts.map(function(p) { return p.category; })));
+    var deptSet = {};
+    prompts.forEach(function(p) {
+      (p.department || []).forEach(function(d) { deptSet[d] = true; });
+    });
+    departments = Object.keys(deptSet).sort();
+    renderCategoryFilters();
+    renderDepartmentFilters();
+    renderPrompts();
+  })
+  .catch(function(err) {
+    promptGrid.innerHTML = '<p style="color:#999;">Could not load prompts. Please refresh the page.</p>';
+    console.error('Failed to load prompts.json', err);
+  });
+</script>
+
+</body>
+</html>
